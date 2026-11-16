@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .hero {
+        text-align: center; padding: 90px 20px;
+        background: radial-gradient(circle at center, #1e293b 0%, #0b0f19 70%);
+        border-bottom: 1px solid #1f2937;
+    }
+    .hero h1 { font-size: 46px; color: #fff; margin-bottom: 15px; letter-spacing: -1px; }
+    .hero p { color: #94a3b8; max-width: 600px; margin: 0 auto 30px auto; font-size: 16px; line-height: 1.6; }
+    .btn-main {
+        background: #00d2ff; color: #0b0f19; padding: 12px 28px; border-radius: 8px;
+        text-decoration: none; font-weight: bold; font-size: 15px; display: inline-block;
+        transition: background 0.2s;
+    }
+    .btn-main:hover { background: #38bdf8; }
+
+    .container { max-width: 1100px; margin: 50px auto; padding: 0 20px; }
+    .section-title { font-size: 24px; color: #fff; margin-bottom: 25px; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .card {
+        background: #111827; border: 1px solid #1f2937; border-radius: 12px;
+        padding: 25px; display: flex; flex-direction: column; justify-content: space-between;
+        transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover { transform: translateY(-4px); border-color: #00d2ff; }
+    .badge {
+        display: inline-block; background: rgba(0, 210, 255, 0.1); color: #00d2ff;
+        font-size: 12px; padding: 5px 12px; border-radius: 20px; margin-bottom: 15px; width: fit-content; font-weight: 600;
+    }
+    .card h3 { color: #fff; font-size: 19px; margin-bottom: 10px; }
+    .card p { color: #94a3b8; font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .price { font-size: 20px; font-weight: bold; color: #fff; }
+    .buy-btn {
+        background: #1f2937; color: #fff; border: 1px solid #374151; padding: 8px 16px;
+        border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+    }
+    .buy-btn:hover { background: #00d2ff; color: #0b0f19; border-color: #00d2ff; }
+</style>
+
+<section class="hero">
+    <h1>Next-Gen Vape & E-Liquid Catalogus</h1>
+    <p>Ontdek de populairste hardware van merken zoals RandM Tornado, Elf Bar en Lost Mary. Bekijk de specificaties en smaken in onze digitale showroom.</p>
+    <a href="/producten" class="btn-main">Bekijk Volledig Assortiment</a>
+</section>
+
+<div class="container">
+    <h2 class="section-title">Uitgelichte Producten</h2>
+    <div class="grid">
+        {% for product in producten %}
+        <div class="card">
+            <div>
+                <span class="badge">{{ product.merk }} // {{ product.type }}</span>
+                <h3>{{ product.naam }}</h3>
+                <p>{{ product.beschrijving }}</p>
+            </div>
+            <div class="price-row">
+                <span class="price">€ {{ "%.2f"|format(product.prijs) }}</span>
+                <button class="buy-btn" onclick="alert('{{ product.naam }} geselecteerd!')">Details</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
