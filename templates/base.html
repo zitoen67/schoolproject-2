@@ -48,7 +48,7 @@
 </head>
 <body>
 
-<!-- Welkomst & Locatie Pop-up -->
+<!-- Welkomst & Locatie Pop-up met GPS Vraag -->
 <div id="welcome-modal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
         <h2>VAPE <span style="color:#00e5ff;">LAB</span></h2>
@@ -63,7 +63,7 @@
     <nav>
         <a href="/">Home</a>
         <a href="/producten">Catalogus</a>
-        <a href="/winkelmand">Winkelmand <span class="cart-badge">{{ session.get('cart', {}).values()|sum(attribute='aantal') }}</span></a>
+        <a href="/winkelmand">Winkelmand <span class="cart-badge">{{ totaal_items|default(0) }}</span></a>
     </nav>
 </header>
 
@@ -76,11 +76,9 @@
 </footer>
 
 <script>
-    // Toon de pop-up alleen als deze sessie nog niet is gestart
     if (!sessionStorage.getItem('popupGezien')) {
         document.getElementById('welcome-modal').style.display = 'flex';
         
-        // Laad alvast globale IP-regio ter informatie in de box
         fetch('https://ipapi.co/json/')
             .then(res => res.json())
             .then(data => {
@@ -91,22 +89,15 @@
             });
     }
 
-    // Zodra de gebruiker op "Akkoord & Doorgaan" klikt, triggert de browser de GPS-toestemming
     function startSite() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    // Coördinaten succesvol opgehaald
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    sessionStorage.setItem('gebruikerLat', lat);
-                    sessionStorage.setItem('gebruikerLon', lon);
+                    sessionStorage.setItem('gebruikerLat', position.coords.latitude);
+                    sessionStorage.setItem('gebruikerLon', position.coords.longitude);
                     sluitPopup();
                 },
-                (error) => {
-                    // Als de gebruiker op "Blokkeer" drukt, sluiten we de popup alsnog gewoon
-                    sluitPopup();
-                },
+                (error) => { sluitPopup(); },
                 { timeout: 4000 }
             );
         } else {

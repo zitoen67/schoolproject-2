@@ -12,15 +12,17 @@ PRODUCTEN = [
     {"id": 6, "naam": "Bar Juice 5000", "categorie": "E-Liquids", "merk": "Bar Juice", "prijs": 5.50, "puffs": "10ml Flesje", "smaak": "Blueberry Sour Raspberry", "beschrijving": "De iconische smaken van wegwerp vapes, speciaal in een flesje voor je pod."}
 ]
 
-# Automatische check om corrupte of oude sessies te resetten
 @app.before_request
 def make_sure_cart_is_valid():
     if 'cart' not in session or not isinstance(session['cart'], dict):
         session['cart'] = {}
 
+def get_totaal_items():
+    return sum(session.get('cart', {}).values())
+
 @app.route('/')
 def home():
-    return render_template('index.html', producten=PRODUCTEN[:4])
+    return render_template('index.html', producten=PRODUCTEN[:4], totaal_items=get_totaal_items())
 
 @app.route('/producten')
 def producten():
@@ -31,52 +33,63 @@ def producten():
         gefilterd = PRODUCTEN
     
     categorieen = sorted(list(set(p['categorie'] for p in PRODUCTEN)))
-    return render_template('producten.html', producten=gefilterd, categorieen=categorieen, actieve_cat=kat_filter)
+    return render_template('producten.html', producten=gefilterd, categorieen=categorieen, actieve_cat=kat_filter, totaal_items=get_totaal_items())
 
 @app.route('/winkelmand')
 def winkelmand():
-    totaal = sum(item['product']['prijs'] * item['aantal'] for item in session['cart'].values())
-    return render_template('winkelmand.html', cart=session['cart'], totaal=totaal)
+    cart_items = []
+    totaal = 0
+    for pid_str, aantal in session.get('cart', {}).items():
+        prod = next((p for p in PRODUCTEN if str(p['id']) == pid_str), None)
+        if prod:
+            subtotaal = prod['prijs'] * aantal
+            totaal += subtotaal
+            cart_items.append({'product': prod, 'aantal': aantal, 'subtotaal': subtotaal})
+            
+    return render_template('winkelmand.html', cart_items=cart_items, totaal=totaal, totaal_items=get_totaal_items())
 
 @app.route('/toevoegen/<int:product_id>')
 def toevoegen(product_id):
-    str_id = str(product_id)
-    prod = next((p for p in PRODUCTEN if p['id'] == product_id), None)
-    
-    if prod:
-        if str_id in session['cart']:
-            session['cart'][str_id]['aantal'] += 1
-        else:
-            session['cart'][str_id] = {'product': prod, 'aantal': 1}
-        session.modified = True
-        
+    pid_str = str(product_id)
+    cart = session.get('cart', {})
+    cart[pid_str] = cart.get(pid_str, 0) + 1
+    session['cart'] = cart
+    session.modified = True
     return redirect(request.referrer or url_for('producten'))
 
 @app.route('/wijzigen/<int:product_id>/<actie>')
 def wijzigen(product_id, actie):
-    str_id = str(product_id)
-    if str_id in session['cart']:
+    pid_str = str(product_id)
+    cart = session.get('cart', {})
+    if pid_str in cart:
         if actie == 'plus':
-            session['cart'][str_id]['aantal'] += 1
+            cart[pid_str] += 1
         elif actie == 'min':
-            session['cart'][str_id]['aantal'] -= 1
-            if session['cart'][str_id]['aantal'] <= 0:
-                del session['cart'][str_id]
+            cart[pid_str] -= 1
+            if cart[pid_str] <= 0:
+                del cart[pid_str]
+        session['cart'] = cart
         session.modified = True
     return redirect(request.referrer or url_for('winkelmand'))
 
 @app.route('/afrekenen', methods=['GET', 'POST'])
 def afrekenen():
-    if not session['cart']:
+    cart = session.get('cart', {})
+    if not cart:
         return redirect(url_for('winkelmand'))
         
-    totaal = sum(item['product']['prijs'] * item['aantal'] for item in session['cart'].values())
-    
+    totaal = 0
+    for pid_str, aantal in cart.items():
+        prod = next((p for p in PRODUCTEN if str(p['id']) == pid_str), None)
+        if prod:
+            totaal += prod['prijs'] * aantal
+            
     if request.method == 'POST':
-        session.pop('cart', None)
-        return render_template('bedankt.html')
+        session['cart'] = {}
+        session.modified = True
+        return render_template('bedankt.html', totaal_items=0)
         
-    return render_template('afrekenen.html', totaal=totaal)
+    return render_template('afrekenen.html', totaal=totaal, totaal_items=get_totaal_items())
 
 if __name__ == '__main__':
     app.run(debug=True)
