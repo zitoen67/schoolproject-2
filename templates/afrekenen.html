@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 600px; margin: 40px auto; padding: 0 20px;">
+    <div style="background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 35px;">
+        <h1 style="margin-bottom: 10px; color: #fff;">Afrekenen</h1>
+        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 25px;">Vul je gegevens in om de bestelling af te ronden (Demo schoolproject).</p>
+        
+        <form method="POST">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 5px;">Volledige Naam</label>
+                <input type="text" required placeholder="Jan Jansen" style="width: 100%; padding: 10px; background: #0b0f19; border: 1px solid #374151; border-radius: 6px; color: #fff;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 5px;">Bezorgadres</label>
+                <input type="text" required placeholder="Schoolstraat 12" style="width: 100%; padding: 10px; background: #0b0f19; border: 1px solid #374151; border-radius: 6px; color: #fff;">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 5px;">Betaalmethode</label>
+                <select style="width: 100%; padding: 10px; background: #0b0f19; border: 1px solid #374151; border-radius: 6px; color: #fff;">
+                    <option>iDEAL (Direct Betalen)</option>
+                    <option>Creditcard</option>
+                    <option>Klachter achteraf betalen</option>
+                </select>
+            </div>
+            <button type="submit" style="width: 100%; background: #22c55e; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer;">Bestelling Plaatsen (€)</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
