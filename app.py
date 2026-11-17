@@ -20,12 +20,16 @@ def home():
 @app.route('/producten')
 def producten():
     kat_filter = request.args.get('categorie')
+    
+    # Filter op categorie indien meegegeven
     if kat_filter:
         gefilterd = [p for p in PRODUCTEN if p['categorie'] == kat_filter]
     else:
         gefilterd = PRODUCTEN
     
-    categorieen = list(set([p['categorie'] for p in PRODUCTEN]))
+    # Veilig de unieke categorieën ophalen
+    categorieen = sorted(list(set(p['categorie'] for p in PRODUCTEN)))
+    
     return render_template('producten.html', producten=gefilterd, categorieen=categorieen, actieve_cat=kat_filter)
 
 @app.route('/winkelmand')
