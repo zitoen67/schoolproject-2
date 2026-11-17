@@ -4,57 +4,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAPE VIBE | Digital Experience</title>
+    <title>VAPE VIBE | Collection</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="smoke smoke-one"></div>
-<div class="smoke smoke-two"></div>
-
 <header>
     <a href="/" class="logo">VAPE<span>VIBE</span></a>
     <nav>
-        <a href="/">HOME</a>
-        <a href="/informatie">INFORMATIE</a>
+        <a href="#home">HOME</a>
+        <a href="#collection">COLLECTIE</a>
+        <a href="#about">OVER ONS</a>
     </nav>
+    <div class="cart">SCHOOLPROJECT</div>
 </header>
 
-<main class="hero">
-    <div class="tag">THE DIGITAL VAPING EXPERIENCE</div>
+<section class="hero" id="home">
+    <div class="hero-content">
+        <p class="eyebrow">WELCOME TO THE DIGITAL UNDERGROUND</p>
+        <h1>ENTER THE<br><span>VAPE VIBE.</span></h1>
+        <p class="intro">
+            Een futuristische digitale collectie,
+            ontworpen met een unieke neon uitstraling.
+        </p>
+        <a href="#collection" class="main-button">ONTDEK DE COLLECTIE</a>
+    </div>
+    <div class="hero-glow"></div>
+</section>
 
-    <h1>ENTER THE<br><span>VAPE VIBE</span></h1>
+<section class="collection" id="collection">
+    <div class="section-heading">
+        <p class="eyebrow">DIGITAL COLLECTION</p>
+        <h2>THE <span>COLLECTION</span></h2>
+        <p>Fictieve designobjecten voor dit schoolproject.</p>
+    </div>
 
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card">
+            <div class="product-image">
+                <div class="product-placeholder">
+                    <span>V</span>
+                </div>
+                <span class="demo-label">DEMO</span>
+            </div>
+
+            <div class="product-info">
+                <p class="category">{{ product.category }}</p>
+                <h3>{{ product.name }}</h3>
+                <p class="description">{{ product.description }}</p>
+                <div class="product-bottom">
+                    <span class="price">€{{ "%.2f"|format(product.price) }}</span>
+                    <span class="details">DEMO ITEM</span>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="about" id="about">
+    <p class="eyebrow">ABOUT VAPE VIBE</p>
+    <h2>BUILT IN THE <span>DARK.</span></h2>
     <p>
-        Een moderne digitale omgeving met neonkleuren,
-        futuristische visuals en informatie over vapen.
+        VAPE VIBE is een fictief schoolproject waarin
+        webdesign, Flask en moderne vormgeving samenkomen.
     </p>
-
-    <a href="/informatie" class="button">ONTDEK MEER</a>
-</main>
-
-<section class="cards">
-    <article class="card">
-        <div class="symbol">01</div>
-        <h2>NICOTINE</h2>
-        <p>Lees wat nicotine is en welke risico's eraan verbonden zijn.</p>
-    </article>
-
-    <article class="card">
-        <div class="symbol">02</div>
-        <h2>GEZONDHEID</h2>
-        <p>Ontdek wat bekend is over de gezondheidseffecten van vapen.</p>
-    </article>
-
-    <article class="card">
-        <div class="symbol">03</div>
-        <h2>STOPPEN</h2>
-        <p>Bekijk informatie en hulpbronnen voor mensen die willen stoppen.</p>
-    </article>
 </section>
 
 <footer>
-    VAPE VIBE — INFORMATIE & BEWUSTWORDING
+    <div class="logo">VAPE<span>VIBE</span></div>
+    <p>FICTIEF SCHOOLPROJECT — GEEN ECHTE VERKOOP</p>
 </footer>
 
 </body>
