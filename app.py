@@ -12,6 +12,12 @@ PRODUCTEN = [
     {"id": 6, "naam": "Bar Juice 5000", "categorie": "E-Liquids", "merk": "Bar Juice", "prijs": 5.50, "puffs": "10ml Flesje", "smaak": "Blueberry Sour Raspberry", "beschrijving": "De iconische smaken van wegwerp vapes, speciaal in een flesje voor je pod."}
 ]
 
+# Automatische check om corrupte of oude sessies te resetten
+@app.before_request
+def make_sure_cart_is_valid():
+    if 'cart' not in session or not isinstance(session['cart'], dict):
+        session['cart'] = {}
+
 @app.route('/')
 def home():
     return render_template('index.html', producten=PRODUCTEN[:4])
@@ -29,18 +35,11 @@ def producten():
 
 @app.route('/winkelmand')
 def winkelmand():
-    if 'cart' not in session:
-        session['cart'] = {}
-    
-    # Bereken totaal
     totaal = sum(item['product']['prijs'] * item['aantal'] for item in session['cart'].values())
     return render_template('winkelmand.html', cart=session['cart'], totaal=totaal)
 
 @app.route('/toevoegen/<int:product_id>')
 def toevoegen(product_id):
-    if 'cart' not in session:
-        session['cart'] = {}
-    
     str_id = str(product_id)
     prod = next((p for p in PRODUCTEN if p['id'] == product_id), None)
     
@@ -56,7 +55,7 @@ def toevoegen(product_id):
 @app.route('/wijzigen/<int:product_id>/<actie>')
 def wijzigen(product_id, actie):
     str_id = str(product_id)
-    if 'cart' in session and str_id in session['cart']:
+    if str_id in session['cart']:
         if actie == 'plus':
             session['cart'][str_id]['aantal'] += 1
         elif actie == 'min':
@@ -64,11 +63,11 @@ def wijzigen(product_id, actie):
             if session['cart'][str_id]['aantal'] <= 0:
                 del session['cart'][str_id]
         session.modified = True
-    return redirect(url_for('winkelmand'))
+    return redirect(request.referrer or url_for('winkelmand'))
 
 @app.route('/afrekenen', methods=['GET', 'POST'])
 def afrekenen():
-    if 'cart' not in session or not session['cart']:
+    if not session['cart']:
         return redirect(url_for('winkelmand'))
         
     totaal = sum(item['product']['prijs'] * item['aantal'] for item in session['cart'].values())
