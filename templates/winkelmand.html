@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo-winkelmand | VAPE VIBE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <a href="/" class="logo">VAPE<span>VIBE</span></a>
+    <nav>
+        <a href="/">HOME</a>
+        <a href="/producten">MERKEN</a>
+        <a href="/winkelmand">WINKELMAND (<span id="cart-count">0</span>)</a>
+    </nav>
+</header>
+
+<section class="collection">
+    <div class="section-heading">
+        <h2>JOUW <span>WINKELMAND</span></h2>
+        <p>Fictieve demo-artikelen</p>
+    </div>
+
+    <div id="cart-items"></div>
+
+    <h2 id="cart-total">Totaal: €0,00</h2>
+    <button class="filter-btn" onclick="clearCart()">MAND LEEGMAKEN</button>
+</section>
+
+<script>
+const cartKey = "vapeVibeDemoCart";
+
+function getCart() {
+    return JSON.parse(localStorage.getItem(cartKey) || "[]");
+}
+
+function saveCart(cart) {
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    renderCart();
+}
+
+function changeQuantity(index, amount) {
+    const cart = getCart();
+    cart[index].quantity += amount;
+
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    saveCart(cart);
+}
+
+function clearCart() {
+    localStorage.removeItem(cartKey);
+    renderCart();
+}
+
+function renderCart() {
+    const cart = getCart();
+    const container = document.getElementById("cart-items");
+
+    let count = 0;
+    let total = 0;
+
+    container.innerHTML = "";
+
+    cart.forEach((item, index) => {
+        count += item.quantity;
+        total += item.price * item.quantity;
+
+        const article = document.createElement("article");
+        article.className = "product-card";
+        article.style.padding = "20px";
+        article.style.marginBottom = "15px";
+
+        const heading = document.createElement("h3");
+        heading.textContent = item.name;
+
+        const price = document.createElement("p");
+        price.textContent = "Demo-prijs: €" + item.price.toFixed(2);
+
+        const quantity = document.createElement("p");
+        quantity.textContent = "Aantal: " + item.quantity;
+
+        const minus = document.createElement("button");
+        minus.className = "filter-btn";
+        minus.textContent = "−";
+        minus.addEventListener("click", () => changeQuantity(index, -1));
+
+        const plus = document.createElement("button");
+        plus.className = "filter-btn";
+        plus.textContent = "+";
+        plus.addEventListener("click", () => changeQuantity(index, 1));
+
+        article.append(heading, price, quantity, minus, plus);
+        container.appendChild(article);
+    });
+
+    if (cart.length === 0) {
+        container.textContent = "Je demo-winkelmand is leeg.";
+    }
+
+    document.getElementById("cart-count").textContent = count;
+    document.getElementById("cart-total").textContent =
+        "Totaal: €" + total.toFixed(2);
+}
+
+renderCart();
+</script>
+
+</body>
+</html>

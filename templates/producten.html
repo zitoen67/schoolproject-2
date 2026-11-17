@@ -7,7 +7,6 @@
     <title>Merken | VAPE VIBE</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
 <header>
@@ -16,27 +15,26 @@
         <a href="/">HOME</a>
         <a href="/producten">MERKEN</a>
         <a href="/informatie">INFORMATIE</a>
+        <a href="/winkelmand">DEMO-MAND</a>
     </nav>
 </header>
 
 <section class="page-hero">
     <p class="eyebrow">EXPLORE THE INDUSTRY</p>
     <h1>BRAND <span>OVERVIEW.</span></h1>
-    <p>Ontdek informatie over bekende merken uit de vape-industrie.</p>
+    <p>Informatie over bekende merken.</p>
 </section>
 
 <section class="collection">
 
     <div class="section-heading">
         <h2>KNOWN <span>BRANDS</span></h2>
-        <p>Kies een merk om het merkprofiel te bekijken.</p>
+        <p>Informatieve merkprofielen.</p>
     </div>
 
     <div class="brand-filters">
         <button class="filter-btn active"
-                onclick="filterBrands('all', this)">
-            ALLES
-        </button>
+                onclick="filterBrands('all', this)">ALLES</button>
 
         {% for brand in brands %}
         <button class="filter-btn"
@@ -47,15 +45,12 @@
     </div>
 
     <div class="search-container">
-        <input
-            type="text"
-            id="brandSearch"
-            placeholder="Zoek een merk..."
-            oninput="searchBrands()">
+        <input id="brandSearch"
+               placeholder="Zoek een merk..."
+               oninput="searchBrands()">
     </div>
 
     <div class="product-grid" id="brandGrid">
-
         {% for brand in brands %}
         <article class="product-card brand-card"
                  data-brand="{{ brand.name }}">
@@ -66,21 +61,14 @@
 
             <div class="product-info">
                 <p class="category">{{ brand.category }}</p>
-
                 <h3>{{ brand.name }}</h3>
-
-                <p class="description">
-                    {{ brand.description }}
-                </p>
-
+                <p class="description">{{ brand.description }}</p>
                 <div class="product-bottom">
                     <span class="details">MERKINFORMATIE</span>
                 </div>
             </div>
-
         </article>
         {% endfor %}
-
     </div>
 
 </section>
@@ -101,7 +89,6 @@ function filterBrands(brand, button) {
     });
 
     button.classList.add("active");
-
     searchBrands();
 }
 
