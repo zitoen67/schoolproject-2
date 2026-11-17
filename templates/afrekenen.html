@@ -1,47 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
-<style>
-    .container { max-width: 600px; margin: 50px auto; padding: 0 20px; }
-    .checkout-box { background: #111827; border: 1px solid #1f2937; border-radius: 14px; padding: 35px; }
-    h1 { font-size: 26px; font-weight: 900; color: #fff; margin-bottom: 8px; }
-    p { color: #9ca3af; font-size: 14px; margin-bottom: 25px; }
-    
-    .form-group { margin-bottom: 18px; }
-    label { display: block; color: #d1d5db; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-    input, select { width: 100%; padding: 12px; background: #030712; border: 1px solid #374151; border-radius: 8px; color: #fff; font-size: 14px; }
-    input:focus, select:focus { outline: none; border-color: #00e5ff; }
-    
-    .pay-btn {
-        width: 100%; background: #22c55e; color: #fff; border: none; padding: 14px;
-        border-radius: 8px; font-weight: 900; font-size: 16px; cursor: pointer; margin-top: 10px;
-        transition: background 0.2s;
-    }
-    .pay-btn:hover { background: #16a34a; }
-</style>
-
-<div class="container">
-    <div class="checkout-box">
-        <h1>Veilig Afrekenen</h1>
-        <p>Vul je gegevens in om de bestelling van € {{ "%.2f"|format(totaal) }} af te ronden.</p>
+<div style="max-width: 650px; margin: 40px auto; padding: 0 20px;">
+    <div style="background: #111827; border: 1px solid #1f2937; border-radius: 14px; padding: 35px;">
+        <h1 style="font-size: 26px; font-weight: 900; color: #fff; margin-bottom: 8px;">Afrekenen & Gegevens</h1>
+        <p style="color: #9ca3af; font-size: 14px; margin-bottom: 25px;">Totaal te betalen: <strong style="color: #00e5ff;">€ {{ "%.2f"|format(totaal) }}</strong></p>
         
         <form method="POST">
-            <div class="form-group">
-                <label>Volledige Naam</label>
-                <input type="text" required placeholder="Bijv. Sam de Vries">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; color: #d1d5db; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Voornaam</label>
+                    <input type="text" required placeholder="Jan" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #374151; border-radius: 6px; color: #fff;">
+                </div>
+                <div>
+                    <label style="display: block; color: #d1d5db; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Achternaam</label>
+                    <input type="text" required placeholder="Jansen" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #374151; border-radius: 6px; color: #fff;">
+                </div>
             </div>
-            <div class="form-group">
-                <label>Bezorgadres</label>
-                <input type="text" required placeholder="Straatnaam en huisnummer">
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; color: #d1d5db; font-size: 13px; font-weight: 600; margin-bottom: 6px;">E-mailadres</label>
+                <input type="email" required placeholder="jan@school.nl" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #374151; border-radius: 6px; color: #fff;">
             </div>
-            <div class="form-group">
-                <label>Betaalmethode</label>
-                <select>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; color: #d1d5db; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Straatnaam + Huisnummer</label>
+                    <input type="text" required placeholder="Kennislaan 12" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #374151; border-radius: 6px; color: #fff;">
+                </div>
+                <div>
+                    <label style="display: block; color: #d1d5db; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Postcode</label>
+                    <input type="text" required placeholder="1012 AB" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #374151; border-radius: 6px; color: #fff;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; color: #d1d5db; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Betaalmethode</label>
+                <select style="width: 100%; padding: 10px; background: #030712; border: 1px solid #374151; border-radius: 6px; color: #fff;">
                     <option>iDEAL (Direct Betalen)</option>
                     <option>Creditcard (Mastercard / Visa)</option>
                     <option>Klarna Achteraf Betalen</option>
                 </select>
             </div>
-            <button type="submit" class="pay-btn">Bestelling Plaatsen & Betalen</button>
+
+            <button type="submit" style="width: 100%; background: #22c55e; color: #fff; border: none; padding: 14px; border-radius: 8px; font-weight: 900; font-size: 15px; cursor: pointer;">Bestelling Afronden & Betalen</button>
         </form>
     </div>
 </div>
