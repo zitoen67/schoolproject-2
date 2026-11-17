@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 app = Flask(__name__)
 app.secret_key = 'vape_lab_secret_key'
 
-# Echte vape catalogus met merken en categorieën
 PRODUCTEN = [
     {"id": 1, "naam": "RandM Tornado 9000", "categorie": "Wegwerp Vapes", "merk": "RandM", "prijs": 14.95, "puffs": "9000 Puffs", "smaak": "Blue Razz Ice", "beschrijving": "Extreem populaire wegwerp vape met RGB-verlichting en oplaadbare batterij."},
     {"id": 2, "naam": "Elf Bar 600 V2", "categorie": "Wegwerp Vapes", "merk": "Elf Bar", "prijs": 7.95, "puffs": "600 Puffs", "smaak": "Watermelon", "beschrijving": "Strakke aluminium behuizing en verbeterde QUAQ-mesh coil voor intense smaak."},
@@ -20,48 +19,64 @@ def home():
 @app.route('/producten')
 def producten():
     kat_filter = request.args.get('categorie')
-    
-    # Filter op categorie indien meegegeven
     if kat_filter:
         gefilterd = [p for p in PRODUCTEN if p['categorie'] == kat_filter]
     else:
         gefilterd = PRODUCTEN
     
-    # Veilig de unieke categorieën ophalen
     categorieen = sorted(list(set(p['categorie'] for p in PRODUCTEN)))
-    
     return render_template('producten.html', producten=gefilterd, categorieen=categorieen, actieve_cat=kat_filter)
 
 @app.route('/winkelmand')
 def winkelmand():
     if 'cart' not in session:
-        session['cart'] = []
-    return render_template('winkelmand.html', cart=session['cart'])
+        session['cart'] = {}
+    
+    # Bereken totaal
+    totaal = sum(item['product']['prijs'] * item['aantal'] for item in session['cart'].values())
+    return render_template('winkelmand.html', cart=session['cart'], totaal=totaal)
 
 @app.route('/toevoegen/<int:product_id>')
 def toevoegen(product_id):
     if 'cart' not in session:
-        session['cart'] = []
+        session['cart'] = {}
+    
+    str_id = str(product_id)
     prod = next((p for p in PRODUCTEN if p['id'] == product_id), None)
+    
     if prod:
-        session['cart'].append(prod)
+        if str_id in session['cart']:
+            session['cart'][str_id]['aantal'] += 1
+        else:
+            session['cart'][str_id] = {'product': prod, 'aantal': 1}
         session.modified = True
-    return redirect(url_for('winkelmand'))
+        
+    return redirect(request.referrer or url_for('producten'))
 
-@app.route('/verwijderen/<int:index>')
-def verwijderen(index):
-    if 'cart' in session and len(session['cart']) > index:
-        session['cart'].pop(index)
+@app.route('/wijzigen/<int:product_id>/<actie>')
+def wijzigen(product_id, actie):
+    str_id = str(product_id)
+    if 'cart' in session and str_id in session['cart']:
+        if actie == 'plus':
+            session['cart'][str_id]['aantal'] += 1
+        elif actie == 'min':
+            session['cart'][str_id]['aantal'] -= 1
+            if session['cart'][str_id]['aantal'] <= 0:
+                del session['cart'][str_id]
         session.modified = True
     return redirect(url_for('winkelmand'))
 
 @app.route('/afrekenen', methods=['GET', 'POST'])
 def afrekenen():
+    if 'cart' not in session or not session['cart']:
+        return redirect(url_for('winkelmand'))
+        
+    totaal = sum(item['product']['prijs'] * item['aantal'] for item in session['cart'].values())
+    
     if request.method == 'POST':
         session.pop('cart', None)
         return render_template('bedankt.html')
-    
-    totaal = sum(item['prijs'] for item in session.get('cart', []))
+        
     return render_template('afrekenen.html', totaal=totaal)
 
 if __name__ == '__main__':
