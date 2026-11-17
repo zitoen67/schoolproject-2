@@ -1,73 +1,61 @@
-{% extends "base.html" %}
-{% block content %}
-<style>
-    .hero {
-        text-align: center; padding: 100px 20px;
-        background: radial-gradient(circle at center, #1e1b4b 0%, #0b0f19 70%);
-        border-bottom: 1px solid #1f2937;
-    }
-    .hero h1 { font-size: 48px; font-weight: 900; color: #fff; margin-bottom: 15px; }
-    .hero p { color: #9ca3af; max-width: 600px; margin: 0 auto 30px auto; font-size: 16px; line-height: 1.6; }
-    .btn-glow {
-        background: #00e5ff; color: #030712; padding: 14px 32px; border-radius: 8px;
-        text-decoration: none; font-weight: 800; font-size: 15px; display: inline-block;
-        box-shadow: 0 0 25px rgba(0, 229, 255, 0.3); transition: transform 0.2s;
-    }
-    .btn-glow:hover { transform: scale(1.03); }
 
-    .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
-    .section-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
-    .section-title a { font-size: 14px; color: #00e5ff; text-decoration: none; }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 25px; }
-    .card {
-        background: #111827; border: 1px solid #1f2937; border-radius: 14px;
-        padding: 24px; display: flex; flex-direction: column; justify-content: space-between;
-        transition: transform 0.2s, border-color 0.2s;
-    }
-    .card:hover { transform: translateY(-5px); border-color: #00e5ff; }
-    .badge {
-        background: rgba(0, 229, 255, 0.1); color: #00e5ff; font-size: 11px;
-        padding: 5px 12px; border-radius: 20px; margin-bottom: 12px; width: fit-content; font-weight: 700;
-    }
-    .card h3 { color: #fff; font-size: 18px; margin-bottom: 8px; font-weight: 700; }
-    .card p { color: #9ca3af; font-size: 13px; line-height: 1.5; margin-bottom: 20px; }
-    .price-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #1f2937; pt: 15px; padding-top: 15px; }
-    .price { font-size: 20px; font-weight: 900; color: #fff; }
-    .add-btn {
-        background: #1f2937; color: #fff; border: 1px solid #374151; padding: 8px 16px;
-        border-radius: 6px; font-weight: 700; cursor: pointer; text-decoration: none; font-size: 13px;
-        transition: background 0.2s, border-color 0.2s;
-    }
-    .add-btn:hover { background: #00e5ff; color: #030712; border-color: #00e5ff; }
-</style>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAPE VIBE | Digital Experience</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 
-<section class="hero">
-    <h1>Next-Gen Vape <span class="neon-text">Collection</span></h1>
-    <p>Ontdek premium hardware, intense fruitaroma's en de populairste wegwerp vapes van dit moment.</p>
-    <a href="/producten" class="btn-glow">Bekijk Alle Producten</a>
+<div class="smoke smoke-one"></div>
+<div class="smoke smoke-two"></div>
+
+<header>
+    <a href="/" class="logo">VAPE<span>VIBE</span></a>
+    <nav>
+        <a href="/">HOME</a>
+        <a href="/informatie">INFORMATIE</a>
+    </nav>
+</header>
+
+<main class="hero">
+    <div class="tag">THE DIGITAL VAPING EXPERIENCE</div>
+
+    <h1>ENTER THE<br><span>VAPE VIBE</span></h1>
+
+    <p>
+        Een moderne digitale omgeving met neonkleuren,
+        futuristische visuals en informatie over vapen.
+    </p>
+
+    <a href="/informatie" class="button">ONTDEK MEER</a>
+</main>
+
+<section class="cards">
+    <article class="card">
+        <div class="symbol">01</div>
+        <h2>NICOTINE</h2>
+        <p>Lees wat nicotine is en welke risico's eraan verbonden zijn.</p>
+    </article>
+
+    <article class="card">
+        <div class="symbol">02</div>
+        <h2>GEZONDHEID</h2>
+        <p>Ontdek wat bekend is over de gezondheidseffecten van vapen.</p>
+    </article>
+
+    <article class="card">
+        <div class="symbol">03</div>
+        <h2>STOPPEN</h2>
+        <p>Bekijk informatie en hulpbronnen voor mensen die willen stoppen.</p>
+    </article>
 </section>
 
-<div class="container">
-    <div class="section-title">
-        <span>Populair Deze Week</span>
-        <a href="/producten">Alles bekijken →</a>
-    </div>
-    
-    <div class="grid">
-        {% for product in producten %}
-        <div class="card">
-            <div>
-                <span class="badge">{{ product.merk }} // {{ product.puffs }}</span>
-                <h3>{{ product.naam }}</h3>
-                <p>{{ product.beschrijving }}</p>
-            </div>
-            <div class="price-row">
-                <span class="price">€ {{ "%.2f"|format(product.prijs) }}</span>
-                <a href="/toevoegen/{{ product.id }}" class="add-btn">+ In Mandje</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endblock %}
+<footer>
+    VAPE VIBE — INFORMATIE & BEWUSTWORDING
+</footer>
+
+</body>
+</html>
