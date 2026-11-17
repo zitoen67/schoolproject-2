@@ -7,6 +7,7 @@
     <title>Merken | VAPE VIBE</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
 <header>
@@ -21,13 +22,28 @@
 <section class="page-hero">
     <p class="eyebrow">EXPLORE THE INDUSTRY</p>
     <h1>BRAND <span>OVERVIEW.</span></h1>
-    <p>Leer meer over bekende namen binnen de vape-industrie.</p>
+    <p>Ontdek informatie over bekende merken uit de vape-industrie.</p>
 </section>
 
 <section class="collection">
+
     <div class="section-heading">
         <h2>KNOWN <span>BRANDS</span></h2>
-        <p>Informatieve merkprofielen — geen productverkoop.</p>
+        <p>Kies een merk om het merkprofiel te bekijken.</p>
+    </div>
+
+    <div class="brand-filters">
+        <button class="filter-btn active"
+                onclick="filterBrands('all', this)">
+            ALLES
+        </button>
+
+        {% for brand in brands %}
+        <button class="filter-btn"
+                onclick="filterBrands('{{ brand.name }}', this)">
+            {{ brand.name }}
+        </button>
+        {% endfor %}
     </div>
 
     <div class="search-container">
@@ -35,27 +51,38 @@
             type="text"
             id="brandSearch"
             placeholder="Zoek een merk..."
-            oninput="searchBrands()"
-        >
+            oninput="searchBrands()">
     </div>
 
     <div class="product-grid" id="brandGrid">
+
         {% for brand in brands %}
-        <article class="product-card brand-card">
+        <article class="product-card brand-card"
+                 data-brand="{{ brand.name }}">
+
             <div class="brand-image">
                 <span>{{ brand.name[0] }}</span>
             </div>
+
             <div class="product-info">
                 <p class="category">{{ brand.category }}</p>
+
                 <h3>{{ brand.name }}</h3>
-                <p class="description">{{ brand.description }}</p>
+
+                <p class="description">
+                    {{ brand.description }}
+                </p>
+
                 <div class="product-bottom">
                     <span class="details">MERKINFORMATIE</span>
                 </div>
             </div>
+
         </article>
         {% endfor %}
+
     </div>
+
 </section>
 
 <footer>
@@ -64,14 +91,34 @@
 </footer>
 
 <script>
+let selectedBrand = "all";
+
+function filterBrands(brand, button) {
+    selectedBrand = brand;
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    searchBrands();
+}
+
 function searchBrands() {
     const query = document.getElementById("brandSearch")
         .value.toLowerCase();
 
     document.querySelectorAll(".brand-card").forEach(card => {
-        card.style.display = card.innerText
-            .toLowerCase()
-            .includes(query) ? "" : "none";
+        const matchesBrand =
+            selectedBrand === "all" ||
+            card.dataset.brand === selectedBrand;
+
+        const matchesSearch =
+            card.innerText.toLowerCase().includes(query);
+
+        card.style.display =
+            matchesBrand && matchesSearch ? "" : "none";
     });
 }
 </script>
