@@ -56,14 +56,7 @@ nav a {
 
 nav a:hover {
     color: #c46aff;
-}
-
-.cart {
-    color: #c46aff;
-    font-size: 10px;
-    letter-spacing: 2px;
-    border: 1px solid #7133a1;
-    padding: 12px 17px;
+    text-shadow: 0 0 12px #b44aff;
 }
 
 .hero {
@@ -88,15 +81,18 @@ nav a:hover {
     margin-bottom: 25px;
 }
 
-.hero h1 {
+.hero h1,
+.page-hero h1 {
     font-size: clamp(55px, 9vw, 105px);
     line-height: .95;
     letter-spacing: -5px;
 }
 
 .hero h1 span,
-.section-heading h2 span,
-.about h2 span {
+.page-hero h1 span,
+.feature-section h2 span,
+.about h2 span,
+.section-heading h2 span {
     color: #b44aff;
     text-shadow: 0 0 25px #9d35e9;
 }
@@ -136,28 +132,82 @@ nav a:hover {
     opacity: .3;
 }
 
+.feature-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+    padding: 100px 10%;
+    background: #10091a;
+}
+
+.feature-section h2,
+.about h2 {
+    font-size: 42px;
+    line-height: 1.2;
+}
+
+.feature-section > p {
+    max-width: 420px;
+    color: #999;
+    line-height: 1.9;
+}
+
+.page-hero {
+    padding: 110px 10%;
+    background:
+        radial-gradient(ellipse at 80% 40%, #321052, transparent 50%),
+        #0b0712;
+}
+
+.page-hero > p:last-child {
+    color: #999;
+    margin-top: 25px;
+    line-height: 1.7;
+}
+
 .collection {
     padding: 100px 8%;
 }
 
 .section-heading {
     text-align: center;
-    margin-bottom: 55px;
+    margin-bottom: 45px;
 }
 
-.section-heading h2,
-.about h2 {
+.section-heading h2 {
     font-size: 42px;
     letter-spacing: 2px;
     margin-bottom: 15px;
 }
 
-.section-heading > p:last-child {
+.section-heading p {
     color: #888;
     font-size: 13px;
 }
 
-.product-grid {
+.search-container {
+    max-width: 500px;
+    margin: 0 auto 45px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 17px;
+    color: white;
+    background: #130c1d;
+    border: 1px solid #7133a1;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-container input:focus {
+    border-color: #c46aff;
+    box-shadow: 0 0 15px #9d35e955;
+}
+
+.product-grid,
+.cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
@@ -175,31 +225,19 @@ nav a:hover {
     box-shadow: 0 0 25px #4c176a55;
 }
 
-.product-image {
-    height: 230px;
-    background:
-        radial-gradient(circle, #462065, #130b1e 65%, #09050f);
+.brand-image {
+    height: 190px;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    background: radial-gradient(circle, #462065, #130b1e 65%);
 }
 
-.product-placeholder span {
-    font-size: 100px;
-    font-weight: 900;
+.brand-image span {
     color: #bd68ff;
+    font-size: 85px;
+    font-weight: 900;
     text-shadow: 0 0 30px #a849ed;
-}
-
-.demo-label {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: #a849ed;
-    padding: 7px 12px;
-    font-size: 9px;
-    letter-spacing: 2px;
 }
 
 .product-info {
@@ -229,21 +267,34 @@ nav a:hover {
     border-top: 1px solid #30203c;
     margin-top: 20px;
     padding-top: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.price {
-    color: #c879ff;
-    font-size: 17px;
-    font-weight: bold;
 }
 
 .details {
-    color: #777;
+    color: #bd68ff;
     font-size: 9px;
     letter-spacing: 2px;
+}
+
+.cards {
+    padding: 80px 8%;
+}
+
+.card {
+    background: #110b1b;
+    border: 1px solid #29143c;
+    padding: 35px;
+}
+
+.card h2 {
+    color: #c46aff;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+.card p {
+    color: #999;
+    line-height: 1.8;
+    font-size: 14px;
 }
 
 .about {
@@ -285,17 +336,20 @@ footer p {
         font-size: 9px;
     }
 
-    .cart {
-        display: none;
+    .product-grid,
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .feature-section {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 
 @media (max-width: 550px) {
-    .product-grid {
+    .product-grid,
+    .cards {
         grid-template-columns: 1fr;
     }
 

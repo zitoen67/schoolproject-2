@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merken | VAPE VIBE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <a href="/" class="logo">VAPE<span>VIBE</span></a>
+    <nav>
+        <a href="/">HOME</a>
+        <a href="/producten">MERKEN</a>
+        <a href="/informatie">INFORMATIE</a>
+    </nav>
+</header>
+
+<section class="page-hero">
+    <p class="eyebrow">EXPLORE THE INDUSTRY</p>
+    <h1>BRAND <span>OVERVIEW.</span></h1>
+    <p>Leer meer over bekende namen binnen de vape-industrie.</p>
+</section>
+
+<section class="collection">
+    <div class="section-heading">
+        <h2>KNOWN <span>BRANDS</span></h2>
+        <p>Informatieve merkprofielen — geen productverkoop.</p>
+    </div>
+
+    <div class="search-container">
+        <input
+            type="text"
+            id="brandSearch"
+            placeholder="Zoek een merk..."
+            oninput="searchBrands()"
+        >
+    </div>
+
+    <div class="product-grid" id="brandGrid">
+        {% for brand in brands %}
+        <article class="product-card brand-card">
+            <div class="brand-image">
+                <span>{{ brand.name[0] }}</span>
+            </div>
+            <div class="product-info">
+                <p class="category">{{ brand.category }}</p>
+                <h3>{{ brand.name }}</h3>
+                <p class="description">{{ brand.description }}</p>
+                <div class="product-bottom">
+                    <span class="details">MERKINFORMATIE</span>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<footer>
+    <div class="logo">VAPE<span>VIBE</span></div>
+    <p>INFORMATIEF SCHOOLPROJECT</p>
+</footer>
+
+<script>
+function searchBrands() {
+    const query = document.getElementById("brandSearch")
+        .value.toLowerCase();
+
+    document.querySelectorAll(".brand-card").forEach(card => {
+        card.style.display = card.innerText
+            .toLowerCase()
+            .includes(query) ? "" : "none";
+    });
+}
+</script>
+
+</body>
+</html>

@@ -3,54 +3,65 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-products = [
+brands = [
     {
-        "id": 1,
-        "name": "Purple Cloud",
-        "category": "Collectibles",
-        "description": "Fictief paars neon verzamelobject.",
-        "price": 19.95
+        "name": "Vaporesso",
+        "description": "Een internationaal merk dat bekendstaat om elektronische dampapparaten.",
+        "category": "Merkprofiel"
     },
     {
-        "id": 2,
-        "name": "Neon Blue",
-        "category": "Collectibles",
-        "description": "Futuristisch blauw decoratief object.",
-        "price": 24.95
+        "name": "SMOK",
+        "description": "Een merk uit de vape-industrie met een lange geschiedenis.",
+        "category": "Merkprofiel"
     },
     {
-        "id": 3,
-        "name": "Midnight Glow",
-        "category": "Collectibles",
-        "description": "Donker designobject met paarse details.",
-        "price": 29.95
+        "name": "Geekvape",
+        "description": "Een merk dat bekend is binnen de elektronische dampindustrie.",
+        "category": "Merkprofiel"
     },
     {
-        "id": 4,
-        "name": "Cyber Purple",
-        "category": "Collectibles",
-        "description": "Fictief cyberpunk verzamelobject.",
-        "price": 17.95
+        "name": "Lost Mary",
+        "description": "Een merk dat bekendheid kreeg met wegwerp-e-sigaretten.",
+        "category": "Merkprofiel"
     },
     {
-        "id": 5,
-        "name": "Blue Galaxy",
-        "category": "Collectibles",
-        "description": "Decoratief object met sterrenmotief.",
-        "price": 22.95
+        "name": "ELFBAR",
+        "description": "Een internationaal bekend merk binnen de e-sigarettenmarkt.",
+        "category": "Merkprofiel"
     },
     {
-        "id": 6,
-        "name": "Dark Edition",
-        "category": "Collectibles",
-        "description": "Minimalistisch zwart designobject.",
-        "price": 27.95
+        "name": "VOOPOO",
+        "description": "Een fabrikant van elektronische dampapparaten.",
+        "category": "Merkprofiel"
+    },
+    {
+        "name": "Innokin",
+        "description": "Een fabrikant die actief is in de vape-industrie.",
+        "category": "Merkprofiel"
+    },
+    {
+        "name": "OXVA",
+        "description": "Een merk dat elektronische dampapparaten ontwikkelt.",
+        "category": "Merkprofiel"
+    },
+    {
+        "name": "Aspire",
+        "description": "Een merk met een lange geschiedenis in de vape-industrie.",
+        "category": "Merkprofiel"
     }
 ]
 
 @app.route("/")
 def home():
-    return render_template("index.html", products=products)
+    return render_template("index.html")
+
+@app.route("/producten")
+def producten():
+    return render_template("producten.html", brands=brands)
+
+@app.route("/informatie")
+def informatie():
+    return render_template("informatie.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
