@@ -1,34 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
-<div style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
-    <h1>Jouw Winkelmand</h1>
+<style>
+    .container { max-width: 800px; margin: 50px auto; padding: 0 20px; }
+    .cart-box { background: #111827; border: 1px solid #1f2937; border-radius: 14px; padding: 30px; }
+    h1 { font-size: 26px; font-weight: 900; color: #fff; margin-bottom: 20px; }
     
-    {% if cart %}
-    <div style="background: #111827; border: 1px solid #1f2937; border-radius: 10px; padding: 20px; margin-top: 20px;">
-        {% set ns = namespace(totaal=0) %}
-        {% for item in cart %}
-        {% set ns.totaal = ns.totaal + item.prijs %}
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #1f2937;">
-            <div>
-                <strong style="color: #fff;">{{ item.naam }}</strong>
-                <div style="color: #94a3b8; font-size: 12px;">{{ item.categorie }}</div>
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #1f2937; }
+    .cart-item strong { color: #fff; font-size: 16px; }
+    .cart-item span { color: #9ca3af; font-size: 13px; }
+    .remove-btn { color: #ef4444; text-decoration: none; font-size: 13px; font-weight: 600; }
+    .remove-btn:hover { text-decoration: underline; }
+    
+    .cart-total { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; font-size: 20px; font-weight: 800; color: #fff; border-top: 2px solid #1f2937; padding-top: 20px; }
+    .checkout-btn {
+        display: block; width: 100%; background: #00e5ff; color: #030712; text-align: center;
+        padding: 14px; border-radius: 8px; font-weight: 900; text-decoration: none; margin-top: 25px; font-size: 16px;
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    }
+    .checkout-btn:hover { opacity: 0.9; }
+</style>
+
+<div class="container">
+    <div class="cart-box">
+        <h1>Jouw Winkelmand</h1>
+        
+        {% if cart %}
+            {% set ns = namespace(totaal=0) %}
+            {% for item in cart %}
+                {% set ns.totaal = ns.totaal + item.prijs %}
+                <div class="cart-item">
+                    <div>
+                        <strong>{{ item.naam }}</strong><br>
+                        <span>{{ item.categorie }}</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong style="color: #00e5ff;">€ {{ "%.2f"|format(item.prijs) }}</strong><br>
+                        <a href="/verwijderen/{{ loop.index0 }}" class="remove-btn">Verwijderen</a>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <div class="cart-total">
+                <span>Totaalbedrag:</span>
+                <span style="color: #00e5ff;">€ {{ "%.2f"|format(ns.totaal) }}</span>
             </div>
-            <span style="color: #00d2ff; font-weight: bold;">€ {{ "%.2f"|format(item.prijs) }}</span>
-        </div>
-        {% endfor %}
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px; font-size: 18px;">
-            <strong style="color: #fff;">Totaalprijs:</strong>
-            <strong style="color: #00d2ff;">€ {{ "%.2f"|format(ns.totaal) }}</strong>
-        </div>
-        
-        <div style="display: flex; gap: 15px; margin-top: 30px;">
-            <a href="/afrekenen" style="flex: 1; background: #00d2ff; color: #0b0f19; text-align: center; padding: 12px; border-radius: 6px; font-weight: bold; text-decoration: none;">Naar Afrekenen</a>
-            <a href="/leegmaken" style="background: #ef4444; color: #fff; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px;">Mandje Leggen</a>
-        </div>
+            
+            <a href="/afrekenen" class="checkout-btn">Naar Afrekenen →</a>
+        {% else %}
+            <p style="color: #9ca3af; text-align: center; padding: 40px 0;">Je winkelmandje is nog leeg. Ontdek onze <a href="/producten" style="color: #00e5ff;">catalogus</a>.</p>
+        {% endif %}
     </div>
-    {% else %}
-    <p style="color: #94a3b8; margin-top: 20px;">Je winkelmandje is nog leeg. Bekijk ons <a href="/producten" style="color: #00d2ff;">assortiment</a> om producten toe te voegen.</p>
-    {% endif %}
 </div>
 {% endblock %}
