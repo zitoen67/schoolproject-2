@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
-app.secret_key = 'vape_lab_secret_key_veilig'
+app.secret_key = 'vape_lab_super_geheim_key'
 
 PRODUCTEN = [
     {"id": 1, "naam": "RandM Tornado 9000", "categorie": "Wegwerp Vapes", "merk": "RandM", "prijs": 14.95, "puffs": "9000 Puffs", "smaak": "Blue Razz Ice", "beschrijving": "Extreem populaire wegwerp vape met RGB-verlichting en oplaadbare batterij."},
@@ -13,16 +13,12 @@ PRODUCTEN = [
 ]
 
 @app.before_request
-def controleer_sessie():
-    # Zorg dat de sessie voor het winkelmandje altijd veilig is
+def check_session():
     if 'cart' not in session or not isinstance(session['cart'], dict):
         session['cart'] = {}
 
 def get_totaal_items():
-    try:
-        return sum(int(aantal) for aantal in session.get('cart', {}).values())
-    except:
-        return 0
+    return sum(session.get('cart', {}).values())
 
 @app.route('/')
 def home():
@@ -30,25 +26,20 @@ def home():
 
 @app.route('/producten')
 def producten():
-    try:
-        kat_filter = request.args.get('categorie')
+    kat_filter = request.args.get('categorie')
+    
+    if kat_filter:
+        gefilterd = [p for p in PRODUCTEN if p['categorie'] == kat_filter]
+    else:
+        gefilterd = PRODUCTEN
         
-        if kat_filter and kat_filter.strip():
-            gefilterd = [p for p in PRODUCTEN if p['categorie'].lower() == kat_filter.lower()]
-        else:
-            gefilterd = PRODUCTEN
-        
-        # Unieke categorieën veilig ophalen
-        categorieen = sorted(list(set(p['categorie'] for p in PRODUCTEN)))
-        
-        return render_template('producten.html', 
-                             producten=gefilterd, 
-                             categorieen=categorieen, 
-                             actieve_cat=kat_filter, 
-                             totaal_items=get_totaal_items())
-    except Exception as e:
-        # Als er toch iets misgaat, sturen we de gebruiker veilig terug naar de ongefilterde catalogus
-        return redirect(url_for('producten'))
+    categorieen = list(set(p['categorie'] for p in PRODUCTEN))
+    
+    return render_template('producten.html', 
+                         producten=gefilterd, 
+                         categorieen=categorieen, 
+                         actieve_cat=kat_filter, 
+                         totaal_items=get_totaal_items())
 
 @app.route('/winkelmand')
 def winkelmand():
@@ -57,14 +48,11 @@ def winkelmand():
     cart = session.get('cart', {})
     
     for pid_str, aantal in cart.items():
-        try:
-            prod = next((p for p in PRODUCTEN if str(p['id']) == str(pid_str)), None)
-            if prod:
-                subtotaal = prod['prijs'] * int(aantal)
-                totaal += subtotaal
-                cart_items.append({'product': prod, 'aantal': int(aantal), 'subtotaal': subtotaal})
-        except:
-            continue
+        prod = next((p for p in PRODUCTEN if str(p['id']) == pid_str), None)
+        if prod:
+            subtotaal = prod['prijs'] * aantal
+            totaal += subtotaal
+            cart_items.append({'product': prod, 'aantal': aantal, 'subtotaal': subtotaal})
             
     return render_template('winkelmand.html', cart_items=cart_items, totaal=totaal, totaal_items=get_totaal_items())
 
@@ -75,7 +63,7 @@ def toevoegen(product_id):
     cart[pid_str] = cart.get(pid_str, 0) + 1
     session['cart'] = cart
     session.modified = True
-    return redirect(request.referrer or url_for('producten'))
+    return redirect(url_for('producten'))
 
 @app.route('/wijzigen/<int:product_id>/<actie>')
 def wijzigen(product_id, actie):
@@ -100,9 +88,9 @@ def afrekenen():
         
     totaal = 0
     for pid_str, aantal in cart.items():
-        prod = next((p for p in PRODUCTEN if str(p['id']) == str(pid_str)), None)
+        prod = next((p for p in PRODUCTEN if str(p['id']) == pid_str), None)
         if prod:
-            totaal += prod['prijs'] * int(aantal)
+            totaal += prod['prijs'] * aantal
             
     if request.method == 'POST':
         session['cart'] = {}
